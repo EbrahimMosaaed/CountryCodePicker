@@ -64,8 +64,10 @@ class _SelectionDialogState extends State<SelectionDialog> {
         child: Container(
           clipBehavior: Clip.hardEdge,
           width: widget.size?.width ?? MediaQuery.of(context).size.width,
+          // height: MediaQuery.of(context).size.height,
           height:
-              widget.size?.height ?? MediaQuery.of(context).size.height * 0.85,
+              widget.size?.height ?? MediaQuery.of(context).size.height * 0.70,
+
           decoration: widget.boxDecoration ??
               BoxDecoration(
                 color: widget.backgroundColor ?? Colors.white,
@@ -80,18 +82,41 @@ class _SelectionDialogState extends State<SelectionDialog> {
                 ],
               ),
           child: Column(
-            mainAxisSize: MainAxisSize.min,
+            // mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              IconButton(
-                padding: const EdgeInsets.all(0),
-                iconSize: 20,
-                icon: widget.closeIcon!,
-                onPressed: () => Navigator.pop(context),
+              SizedBox(height: 5),
+              Center(
+                child: Container(height: 5, width: 65, color: Colors.grey),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8.0),
+                child: Row(
+                  children: [
+                    Text("Country Code",
+                        style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.black54)),
+                    Spacer(),
+                    TextButton(
+                      child: Text("Cancel",
+                          style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.grey)),
+                      // padding: const EdgeInsets.all(0),
+                      // iconSize: 20,
+                      // icon: widget.closeIcon!,
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ],
+                ),
               ),
               if (!widget.hideSearch)
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  padding: const EdgeInsets.only(
+                      left: 20, right: 20, top: 10, bottom: 20),
                   child: TextField(
                     style: widget.searchStyle,
                     decoration: widget.searchDecoration,
@@ -108,7 +133,12 @@ class _SelectionDialogState extends State<SelectionDialog> {
                             children: [
                               ...widget.favoriteElements.map(
                                 (f) => SimpleDialogOption(
-                                  child: _buildOption(f),
+                                  child: Column(
+                                    children: [
+                                      _buildOption(f),
+                                      Divider(thickness: 1, color: Colors.red)
+                                    ],
+                                  ),
                                   onPressed: () {
                                     _selectItem(f);
                                   },
@@ -122,6 +152,8 @@ class _SelectionDialogState extends State<SelectionDialog> {
                     else
                       ...filteredElements.map(
                         (e) => SimpleDialogOption(
+                          // padding: EdgeInsets.symmetric(
+                          //     vertical: 15, horizontal: 20),
                           child: _buildOption(e),
                           onPressed: () {
                             _selectItem(e);
@@ -138,34 +170,48 @@ class _SelectionDialogState extends State<SelectionDialog> {
 
   Widget _buildOption(CountryCode e) {
     return Container(
-      width: 400,
-      child: Flex(
-        direction: Axis.horizontal,
-        children: <Widget>[
-          if (widget.showFlag!)
-            Flexible(
-              child: Container(
-                margin: const EdgeInsets.only(right: 16.0),
-                decoration: widget.flagDecoration,
-                clipBehavior:
-                    widget.flagDecoration == null ? Clip.none : Clip.hardEdge,
-                child: Image.asset(
-                  e.flagUri!,
-                  package: 'country_code_picker',
-                  width: widget.flagWidth,
+      // width: 400,
+      child: Column(
+        children: [
+          Flex(
+            direction: Axis.horizontal,
+            children: <Widget>[
+              if (widget.showFlag!)
+                Flexible(
+                  child: Container(
+                    margin: const EdgeInsets.only(right: 10.0, left: 10),
+                    decoration: widget.flagDecoration,
+                    clipBehavior: widget.flagDecoration == null
+                        ? Clip.none
+                        : Clip.hardEdge,
+                    child: Image.asset(
+                      e.flagUri!,
+                      package: 'country_code_picker',
+                      width: widget.flagWidth,
+                    ),
+                  ),
+                ),
+              Expanded(
+                flex: 4,
+                child: Text(
+                  widget.showCountryOnly!
+                      ? e.toCountryStringOnly()
+                      : e.toLongString(),
+                  overflow: TextOverflow.fade,
+                  style: widget.textStyle,
                 ),
               ),
-            ),
-          Expanded(
-            flex: 4,
-            child: Text(
-              widget.showCountryOnly!
-                  ? e.toCountryStringOnly()
-                  : e.toLongString(),
-              overflow: TextOverflow.fade,
-              style: widget.textStyle,
-            ),
+              // Spacer(),
+              Text(
+                e.dialCode.toString(),
+                style: TextStyle(color: Colors.black),
+              )
+            ],
           ),
+          Divider(
+            thickness: 1,
+            color: Colors.grey.withOpacity(0.16),
+          )
         ],
       ),
     );

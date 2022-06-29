@@ -183,13 +183,23 @@ class CountryCodePickerState extends State<CountryCodePicker> {
                         : Clip.hardEdge,
                     decoration: widget.flagDecoration,
                     margin: widget.alignLeft
-                        ? const EdgeInsets.only(right: 16.0, left: 8.0)
-                        : const EdgeInsets.only(right: 16.0),
+                        ? const EdgeInsets.only(right: 0.0, left: 0.0)
+                        : const EdgeInsets.only(right: 0.0),
                     child: Image.asset(
                       selectedItem!.flagUri!,
                       package: 'country_code_picker',
                       width: widget.flagWidth,
                     ),
+                  ),
+                ),
+              if (widget.showDropDownButton)
+                Flexible(
+                  flex: widget.alignLeft ? 0 : 1,
+                  fit: widget.alignLeft ? FlexFit.tight : FlexFit.loose,
+                  child: Icon(
+                    Icons.keyboard_arrow_down_outlined,
+                    color: Colors.black,
+                    size: 30,
                   ),
                 ),
               if (!widget.hideMainText)
@@ -203,20 +213,6 @@ class CountryCodePickerState extends State<CountryCodePicker> {
                         widget.textStyle ?? Theme.of(context).textTheme.button,
                     overflow: widget.textOverflow,
                   ),
-                ),
-              if (widget.showDropDownButton)
-                Flexible(
-                  flex: widget.alignLeft ? 0 : 1,
-                  fit: widget.alignLeft ? FlexFit.tight : FlexFit.loose,
-                  child: Padding(
-                      padding: widget.alignLeft
-                          ? const EdgeInsets.only(right: 16.0, left: 8.0)
-                          : const EdgeInsets.only(right: 16.0),
-                      child: Icon(
-                        Icons.arrow_drop_down,
-                        color: Colors.grey,
-                        size: widget.flagWidth,
-                      )),
                 ),
             ],
           ),
@@ -282,84 +278,84 @@ class CountryCodePickerState extends State<CountryCodePicker> {
   }
 
   void showCountryCodePickerDialog() {
-    if (!UniversalPlatform.isAndroid && !UniversalPlatform.isIOS) {
-      showDialog(
-        barrierColor: widget.barrierColor ?? Colors.grey.withOpacity(0.5),
-        // backgroundColor: widget.backgroundColor ?? Colors.transparent,
-        context: context,
-        builder: (context) => Center(
-          child: Container(
-            constraints: BoxConstraints(maxHeight: 500, maxWidth: 400),
-            child: Dialog(
-              child: SelectionDialog(
-                elements,
-                favoriteElements,
-                showCountryOnly: widget.showCountryOnly,
-                emptySearchBuilder: widget.emptySearchBuilder,
-                searchDecoration: widget.searchDecoration,
-                searchStyle: widget.searchStyle,
-                textStyle: widget.dialogTextStyle,
-                boxDecoration: widget.boxDecoration,
-                showFlag: widget.showFlagDialog != null
-                    ? widget.showFlagDialog
-                    : widget.showFlag,
-                flagWidth: widget.flagWidth,
-                size: widget.dialogSize,
-                backgroundColor: widget.dialogBackgroundColor,
-                barrierColor: widget.barrierColor,
-                hideSearch: widget.hideSearch,
-                closeIcon: widget.closeIcon,
-                flagDecoration: widget.flagDecoration,
-              ),
-            ),
-          ),
-        ),
-      ).then((e) {
-        if (e != null) {
-          setState(() {
-            selectedItem = e;
-          });
+    // if (!UniversalPlatform.isAndroid && !UniversalPlatform.isIOS) {
+    //   showDialog(
+    //     barrierColor: widget.barrierColor ?? Colors.grey.withOpacity(0.5),
+    //     // backgroundColor: widget.backgroundColor ?? Colors.transparent,
+    //     context: context,
+    //     builder: (context) => Center(
+    //       child: Container(
+    //         constraints: BoxConstraints(maxHeight: 500, maxWidth: 400),
+    //         child: Dialog(
+    //           child: SelectionDialog(
+    //             elements,
+    //             favoriteElements,
+    //             showCountryOnly: widget.showCountryOnly,
+    //             emptySearchBuilder: widget.emptySearchBuilder,
+    //             searchDecoration: widget.searchDecoration,
+    //             searchStyle: widget.searchStyle,
+    //             textStyle: widget.dialogTextStyle,
+    //             boxDecoration: widget.boxDecoration,
+    //             showFlag: widget.showFlagDialog != null
+    //                 ? widget.showFlagDialog
+    //                 : widget.showFlag,
+    //             flagWidth: widget.flagWidth,
+    //             size: widget.dialogSize,
+    //             backgroundColor: widget.dialogBackgroundColor,
+    //             barrierColor: widget.barrierColor,
+    //             hideSearch: widget.hideSearch,
+    //             closeIcon: widget.closeIcon,
+    //             flagDecoration: widget.flagDecoration,
+    //           ),
+    //         ),
+    //       ),
+    //     ),
+    //   ).then((e) {
+    //     if (e != null) {
+    //       setState(() {
+    //         selectedItem = e;
+    //       });
 
-          _publishSelection(e);
-        }
-      });
-    } else {
-      showMaterialModalBottomSheet(
-        barrierColor: widget.barrierColor ?? Colors.grey.withOpacity(0.5),
-        backgroundColor: widget.backgroundColor ?? Colors.transparent,
-        context: context,
-        builder: (context) => Center(
-          child: SelectionDialog(
-            elements,
-            favoriteElements,
-            showCountryOnly: widget.showCountryOnly,
-            emptySearchBuilder: widget.emptySearchBuilder,
-            searchDecoration: widget.searchDecoration,
-            searchStyle: widget.searchStyle,
-            textStyle: widget.dialogTextStyle,
-            boxDecoration: widget.boxDecoration,
-            showFlag: widget.showFlagDialog != null
-                ? widget.showFlagDialog
-                : widget.showFlag,
-            flagWidth: widget.flagWidth,
-            flagDecoration: widget.flagDecoration,
-            size: widget.dialogSize,
-            backgroundColor: widget.dialogBackgroundColor,
-            barrierColor: widget.barrierColor,
-            hideSearch: widget.hideSearch,
-            closeIcon: widget.closeIcon,
-          ),
-        ),
-      ).then((e) {
-        if (e != null) {
-          setState(() {
-            selectedItem = e;
-          });
+    //       _publishSelection(e);
+    //     }
+    //   });
+    // } else {
+    showModalBottomSheet(
+      barrierColor: widget.barrierColor ?? Colors.grey.withOpacity(0.5),
+      backgroundColor: widget.backgroundColor ?? Colors.transparent,
+      context: context,
+      elevation: 0,
+      isScrollControlled: true,
+      builder: (context) => SelectionDialog(
+        elements,
+        favoriteElements,
+        showCountryOnly: widget.showCountryOnly,
+        emptySearchBuilder: widget.emptySearchBuilder,
+        searchDecoration: widget.searchDecoration,
+        searchStyle: widget.searchStyle,
+        textStyle: widget.dialogTextStyle,
+        boxDecoration: widget.boxDecoration,
+        showFlag: widget.showFlagDialog != null
+            ? widget.showFlagDialog
+            : widget.showFlag,
+        flagWidth: widget.flagWidth,
+        flagDecoration: widget.flagDecoration,
+        size: widget.dialogSize,
+        backgroundColor: widget.dialogBackgroundColor,
+        barrierColor: widget.barrierColor,
+        hideSearch: widget.hideSearch,
+        closeIcon: widget.closeIcon,
+      ),
+    ).then((e) {
+      if (e != null) {
+        setState(() {
+          selectedItem = e;
+        });
 
-          _publishSelection(e);
-        }
-      });
-    }
+        _publishSelection(e);
+      }
+    });
+    // }
   }
 
   void _publishSelection(CountryCode e) {
