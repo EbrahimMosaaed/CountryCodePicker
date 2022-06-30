@@ -68,6 +68,16 @@ class CountryCodePicker extends StatefulWidget {
   /// Width of the flag images
   final double flagWidth;
 
+  /// Height of the flag images
+  final double flagHeight;
+
+  final String? cancelText;
+  final String? titleText;
+  final Color? cancelTextColor;
+  final Color? titleTextColor;
+  final String? notFoundText;
+  final Color? topDragColor;
+
   /// Use this property to change the order of the options
   final Comparator<CountryCode>? comparator;
 
@@ -90,7 +100,7 @@ class CountryCodePicker extends StatefulWidget {
     this.initialSelection,
     this.favorite = const [],
     this.textStyle,
-    this.padding = const EdgeInsets.all(8.0),
+    this.padding = const EdgeInsets.all(0.0),
     this.showCountryOnly = false,
     this.searchDecoration = const InputDecoration(),
     this.searchStyle,
@@ -105,6 +115,7 @@ class CountryCodePicker extends StatefulWidget {
     this.flagDecoration,
     this.builder,
     this.flagWidth = 32.0,
+    this.flagHeight = 32.0,
     this.enabled = true,
     this.textOverflow = TextOverflow.ellipsis,
     this.barrierColor,
@@ -118,6 +129,12 @@ class CountryCodePicker extends StatefulWidget {
     this.dialogBackgroundColor,
     this.closeIcon = const Icon(Icons.close),
     this.countryList = codes,
+    this.cancelText,
+    this.titleText,
+    this.cancelTextColor,
+    this.titleTextColor,
+    this.notFoundText,
+    this.topDragColor,
     Key? key,
   }) : super(key: key);
 
@@ -163,12 +180,11 @@ class CountryCodePickerState extends State<CountryCodePicker> {
         child: widget.builder!(selectedItem),
       );
     else {
-      _widget = TextButton(
-        onPressed: widget.enabled ? showCountryCodePickerDialog : null,
+      _widget = InkWell(
+        onTap: widget.enabled ? showCountryCodePickerDialog : null,
         child: Padding(
-          padding: widget.padding,
-          child: Flex(
-            direction: Axis.horizontal,
+          padding: const EdgeInsets.symmetric(horizontal: 5.0),
+          child: Row(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               if (widget.showFlagMain != null
@@ -199,20 +215,20 @@ class CountryCodePickerState extends State<CountryCodePicker> {
                   child: Icon(
                     Icons.keyboard_arrow_down_outlined,
                     color: Colors.black,
-                    size: 30,
+                    size: 25,
                   ),
                 ),
               if (!widget.hideMainText)
-                Flexible(
-                  fit: widget.alignLeft ? FlexFit.tight : FlexFit.loose,
-                  child: Text(
-                    widget.showOnlyCountryWhenClosed
-                        ? selectedItem!.toCountryStringOnly()
-                        : selectedItem.toString(),
-                    style:
-                        widget.textStyle ?? Theme.of(context).textTheme.button,
-                    overflow: widget.textOverflow,
-                  ),
+                Text(
+                  widget.showOnlyCountryWhenClosed
+                      ? selectedItem!.toCountryStringOnly()
+                      : selectedItem.toString(),
+                  style: TextStyle(
+                      fontFamily: "Poppins",
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black),
+                  overflow: widget.textOverflow,
                 ),
             ],
           ),
@@ -278,48 +294,6 @@ class CountryCodePickerState extends State<CountryCodePicker> {
   }
 
   void showCountryCodePickerDialog() {
-    // if (!UniversalPlatform.isAndroid && !UniversalPlatform.isIOS) {
-    //   showDialog(
-    //     barrierColor: widget.barrierColor ?? Colors.grey.withOpacity(0.5),
-    //     // backgroundColor: widget.backgroundColor ?? Colors.transparent,
-    //     context: context,
-    //     builder: (context) => Center(
-    //       child: Container(
-    //         constraints: BoxConstraints(maxHeight: 500, maxWidth: 400),
-    //         child: Dialog(
-    //           child: SelectionDialog(
-    //             elements,
-    //             favoriteElements,
-    //             showCountryOnly: widget.showCountryOnly,
-    //             emptySearchBuilder: widget.emptySearchBuilder,
-    //             searchDecoration: widget.searchDecoration,
-    //             searchStyle: widget.searchStyle,
-    //             textStyle: widget.dialogTextStyle,
-    //             boxDecoration: widget.boxDecoration,
-    //             showFlag: widget.showFlagDialog != null
-    //                 ? widget.showFlagDialog
-    //                 : widget.showFlag,
-    //             flagWidth: widget.flagWidth,
-    //             size: widget.dialogSize,
-    //             backgroundColor: widget.dialogBackgroundColor,
-    //             barrierColor: widget.barrierColor,
-    //             hideSearch: widget.hideSearch,
-    //             closeIcon: widget.closeIcon,
-    //             flagDecoration: widget.flagDecoration,
-    //           ),
-    //         ),
-    //       ),
-    //     ),
-    //   ).then((e) {
-    //     if (e != null) {
-    //       setState(() {
-    //         selectedItem = e;
-    //       });
-
-    //       _publishSelection(e);
-    //     }
-    //   });
-    // } else {
     showModalBottomSheet(
       barrierColor: widget.barrierColor ?? Colors.grey.withOpacity(0.5),
       backgroundColor: widget.backgroundColor ?? Colors.transparent,
@@ -339,12 +313,19 @@ class CountryCodePickerState extends State<CountryCodePicker> {
             ? widget.showFlagDialog
             : widget.showFlag,
         flagWidth: widget.flagWidth,
+        flagHieght: widget.flagHeight,
         flagDecoration: widget.flagDecoration,
         size: widget.dialogSize,
         backgroundColor: widget.dialogBackgroundColor,
         barrierColor: widget.barrierColor,
         hideSearch: widget.hideSearch,
         closeIcon: widget.closeIcon,
+        titleText: widget.titleText,
+        titleTextColor: widget.titleTextColor,
+        cancelText: widget.cancelText,
+        cancelTextColor: widget.cancelTextColor,
+        topDragColor: widget.topDragColor,
+        notFoundText: widget.notFoundText,
       ),
     ).then((e) {
       if (e != null) {
@@ -355,7 +336,6 @@ class CountryCodePickerState extends State<CountryCodePicker> {
         _publishSelection(e);
       }
     });
-    // }
   }
 
   void _publishSelection(CountryCode e) {
