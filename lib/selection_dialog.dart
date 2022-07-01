@@ -111,14 +111,14 @@ class _SelectionDialogState extends State<SelectionDialog> {
                       style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w500,
-                          color: Colors.black54)),
+                          color: widget.titleTextColor)),
                   Spacer(),
                   TextButton(
                     child: Text(widget.cancelText ?? 'Cancel',
                         style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w500,
-                            color: Colors.grey)),
+                            color: widget.cancelTextColor)),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ],
@@ -213,11 +213,8 @@ class _SelectionDialogState extends State<SelectionDialog> {
                   overflow: TextOverflow.fade,
                   style: widget.textStyle),
               Spacer(),
-              Text(
-                e.dialCode.toString(),
-                textDirection: TextDirection.ltr,
-                style: TextStyle(color: Colors.black),
-              )
+              Text(e.dialCode.toString(),
+                  textDirection: TextDirection.ltr, style: widget.textStyle)
             ],
           ),
           Divider(

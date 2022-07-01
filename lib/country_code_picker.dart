@@ -70,6 +70,9 @@ class CountryCodePicker extends StatefulWidget {
 
   /// Height of the flag images
   final double flagHeight;
+  //
+  final Color? arrowColor;
+
   final double dropDownIconSize;
 
   final String? cancelText;
@@ -118,6 +121,7 @@ class CountryCodePicker extends StatefulWidget {
     this.flagWidth = 32.0,
     this.flagHeight = 32.0,
     this.dropDownIconSize = 25,
+    this.arrowColor = Colors.black87,
     this.enabled = true,
     this.textOverflow = TextOverflow.ellipsis,
     this.barrierColor,
@@ -216,7 +220,7 @@ class CountryCodePickerState extends State<CountryCodePicker> {
                   fit: widget.alignLeft ? FlexFit.tight : FlexFit.loose,
                   child: Icon(
                     Icons.keyboard_arrow_down_outlined,
-                    color: Colors.black87,
+                    color: widget.arrowColor,
                     size: widget.dropDownIconSize,
                   ),
                 ),
