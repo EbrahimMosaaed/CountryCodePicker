@@ -70,6 +70,7 @@ class CountryCodePicker extends StatefulWidget {
 
   /// Height of the flag images
   final double flagHeight;
+  final double dropDownIconSize;
 
   final String? cancelText;
   final String? titleText;
@@ -116,6 +117,7 @@ class CountryCodePicker extends StatefulWidget {
     this.builder,
     this.flagWidth = 32.0,
     this.flagHeight = 32.0,
+    this.dropDownIconSize = 25,
     this.enabled = true,
     this.textOverflow = TextOverflow.ellipsis,
     this.barrierColor,
@@ -214,8 +216,8 @@ class CountryCodePickerState extends State<CountryCodePicker> {
                   fit: widget.alignLeft ? FlexFit.tight : FlexFit.loose,
                   child: Icon(
                     Icons.keyboard_arrow_down_outlined,
-                    color: Colors.black,
-                    size: 25,
+                    color: Colors.black87,
+                    size: widget.dropDownIconSize,
                   ),
                 ),
               if (!widget.hideMainText)
@@ -223,11 +225,7 @@ class CountryCodePickerState extends State<CountryCodePicker> {
                   widget.showOnlyCountryWhenClosed
                       ? selectedItem!.toCountryStringOnly()
                       : selectedItem.toString(),
-                  style: TextStyle(
-                      fontFamily: "Poppins",
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black),
+                  style: widget.textStyle,
                   overflow: widget.textOverflow,
                 ),
             ],
